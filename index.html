@@ -2,69 +2,44 @@
 <html lang="es">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>My Chemical Romance</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 0;
-      background-color: #f4f4f4;
-      color: #000;
-      text-align: center;
-    }
-
-    header {
-      background-color: #0033cc;
-      padding: 20px;
-    }
-
-    .band-name {
-      text-align: left;
-      padding: 10px 20px;
-      font-size: 16px;
-      color: #333;
-    }
-
-    .status {
-      background-color: #a4d4ae;
-      color: #333;
-      padding: 30px;
-      font-size: 24px;
-      font-weight: bold;
-    }
-
-    .content {
-      padding: 40px 20px;
-    }
-
-    .content p {
-      font-size: 20px;
-      margin: 20px 0;
-    }
-
-    .highlight {
-      font-weight: bold;
-    }
-
-    a {
-      color: #3366ff;
-      text-decoration: none;
-    }
-  </style>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Clima en Oruro</title>
 </head>
 <body>
 
-  <header></header>
+  <h1>Clima en Oruro</h1>
+  <p id="estado">Cargando...</p>
 
-  <div class="band-name">My Chemical Romance</div>
+  <script>
+    const apiKey = "75dd659c25739c2473282716acb1a78f";
+    const lat = -17.9833;
+    const lon = -67.1500;
 
-  <div class="status">Aprobada</div>
+    const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=metric&lang=es&appid=${apiKey}`;
 
-  <div class="content">
-    <p><span class="highlight">Vas a poder descargar tus tickets a partir del 12 de enero de 2026</span></p>
-    <p>Te notificaremos por email a <a href="mailto:Richigomez617@gmail.com">Richigomez617@gmail.com</a></p>
-  </div>
+    fetch(url)
+      .then(res => res.json())
+      .then(data => {
+        if (data.cod !== 200) {
+          document.getElementById("estado").innerText =
+            "Error: " + data.message;
+          return;
+        }
+
+        const temp = data.main.temp;
+        const desc = data.weather[0].description;
+        const hum = data.main.humidity;
+
+        document.getElementById("estado").innerText =
+          "🌡 Temperatura: " + temp + " °C\n" +
+          "📝 Clima: " + desc + "\n" +
+          "💧 Humedad: " + hum + " %";
+      })
+      .catch(() => {
+        document.getElementById("estado").innerText =
+          "Error al conectar con OpenWeather";
+      });
+  </script>
 
 </body>
 </html>
